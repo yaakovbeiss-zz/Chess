@@ -21,12 +21,12 @@ class Board
   end
 
   def empty?(pos)
-    return true if self[pos] == nil
-    return false
+    return true if self[pos].is_a?(NullPiece)
+    false
   end
 
   def add_piece(piece, pos)
-    raise 'position not empty' unless empty?(pos)
+    raise 'position not empty' unless self[pos]== nil
     self[pos] = piece
   end
 
@@ -43,24 +43,36 @@ class Board
     @grid.flatten.reject {|piece| piece.empty?}
   end
 
-  def valid_move?(start_pos, end_pos)
+  def valid_move?(start_pos)
     raise StartError if self[start_pos].is_a?(NullPiece)
-    if (start_pos.any? {|x| x < 0 || x > 7} || end_pos.any? {|x| x < 0 || x > 7})
-      raise ValidMoveError
-    end
   end
 
-  def move_piece(start_pos, end_pos)
-    valid_move?(start_pos, end_pos)
+  def move_piece(turn_color, start_pos, end_pos)
+
+    valid_move?(start_pos)
     piece = self[start_pos]
+
+    if piece.color != turn_color
+      raise 'You cannot move the opponents piece'
+    elsif !piece.moves.include?(end_pos)
+      p piece.moves
+      raise 'You cannot move like that'
+    end
     piece.pos = end_pos
     self[end_pos] = piece
-    self[start_pos] = NullPiece.new(start_pos)
+    self[start_pos] = NullPiece.instance
+    nil
   end
 
   def in_bounds?(pos)
     pos.all? { |x| x.between?(0,7) }
   end
+
+  def find_king(color)
+    king_pos = pieces.find { |p| p.color == color && p.is_a(King)}
+  end
+
+  private
 
   def fill_back_row(color)
     back_pieces = [

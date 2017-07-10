@@ -4,7 +4,9 @@ require_relative 'board'
 
 class Display
 
-  def initialize(board = Board.new)
+  attr_reader :cursor
+
+  def initialize(board)
     @board = board
     @cursor = Cursor.new([0,0], board)
   end
@@ -20,13 +22,14 @@ class Display
         pos = [x, y]
         if (x.even? && y.even?) || (x.odd? && y.odd?)
           print "#{@board[pos] } ".colorize(background: back_color)
-          
+
         else
           print "#{@board[pos] } ".colorize(background: back_color)
         end
       end
       puts ""
     end
+
   end
 
   def background_color(pos)
@@ -49,6 +52,6 @@ class Display
 
 end
 
-board = Board.new
-display = Display.new(board)
-display.render_move
+# board = Board.new
+# display = Display.new(board)
+# display.render_move

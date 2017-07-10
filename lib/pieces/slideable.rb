@@ -21,11 +21,12 @@ module Slideable
   end
 
   def moves
-    moves = []
-
+    all_moves = []
     move_dirs.each do |dx, dy|
-      moves.concat(find_possible_moves(dx, dy))
+
+      all_moves.concat(find_possible_moves(dx, dy))
     end
+    all_moves
   end
 
   private
@@ -36,7 +37,7 @@ module Slideable
 
   def find_possible_moves(dx, dy)
     cur_x, cur_y = pos
-    moves = []
+    possible_moves = []
 
     loop do
       cur_x, cur_y = cur_x + dx, cur_y + dy
@@ -44,13 +45,14 @@ module Slideable
       break unless board.in_bounds?(pos)
 
       if board.empty?(pos)
-        moves << pos
+        possible_moves << pos
       else
-        moves << pos if board[pos].color != color
+        possible_moves << pos if board[pos].color != color
         break
       end
     end
-    moves
+
+    possible_moves
   end
 
 
