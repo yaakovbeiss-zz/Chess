@@ -17,10 +17,12 @@ class Display
       print "#{x} "
       row.each_with_index do |square, y|
         back_color = background_color([x,y])
+        pos = [x, y]
         if (x.even? && y.even?) || (x.odd? && y.odd?)
-          print " #{@board.grid[x][y].display} ".colorize(background: back_color)
+          print "#{@board[pos] } ".colorize(background: back_color)
+          
         else
-          print " #{@board.grid[x][y].display} ".colorize(background: back_color)
+          print "#{@board[pos] } ".colorize(background: back_color)
         end
       end
       puts ""
@@ -33,7 +35,7 @@ class Display
     elsif (pos.all? {|x| x.even? }) || (pos.all? {|y| y.odd?})
       :grey
     else
-      :white
+      :light_blue
     end
   end
 

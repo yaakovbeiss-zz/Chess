@@ -1,4 +1,5 @@
 require_relative 'pieces'
+require 'byebug'
 
 class Board
 
@@ -6,15 +7,7 @@ class Board
 
   def initialize()
     @grid = Array.new(8) { Array.new(8) }
-    @grid.each_with_index do |row, x|
-      row.each_with_index do |col, y|
-        if x < 2 || x > 5
-          @grid[x][y] = Piece.new([x,y])
-        else
-          @grid[x][y] = NullPiece.new([x,y])
-        end
-      end
-    end
+    fill_board
   end
 
   def [](pos)
@@ -25,6 +18,11 @@ class Board
   def []=(pos, value)
     x, y = pos
     grid[x][y] = value
+  end
+
+  def empty?(pos)
+    return true if self[pos] == nil
+    return false
   end
 
   def add_piece(piece, pos)
@@ -64,27 +62,37 @@ class Board
     pos.all? { |x| x.between?(0,7) }
   end
 
-  def empty?(pos)
-    self[pos].empty?
-  end
-
   def fill_back_row(color)
     back_pieces = [
       Rook, Knight, Bishop, Queen, King, Bishop, Knight, Rook
     ]
     row = (color == :white) ? 7 : 0
     back_pieces.each_with_index do |piece_class, idx|
-      piece_class.new(color, self, [row, idx])
+    piece = piece_class.new(color, self, [row, idx])
+      add_piece(piece, piece.pos)
     end
   end
 
-  def fill_pawns_row
+  def fill_pawns_row(color)
     row = (color == :white) ? 6 : 1
-    8.times { |i| Pawn.new(color, self, [row, i])}
+    8.times  do |i|
+
+      pawn = Pawn.new(color, self, [row, i])
+      add_piece(pawn, pawn.pos)
+    end
   end
 
   def fill_board
-    
+    [:white, :black].each do |color|
+      fill_back_row(color)
+      fill_pawns_row(color)
+    end
+    4.times do |i|
+      8.times do |j|
+        add_piece( NullPiece.instance, [i + 2, j])
+      end
+    end
+
   end
 
 end

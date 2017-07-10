@@ -3,7 +3,7 @@ class Piece
   attr_reader :board, :color
   attr_accessor :pos
 
-  def initialize(pos, board, color)
+  def initialize(color, board, pos)
     @pos = pos
     @board = board
     @color = color
@@ -18,15 +18,6 @@ class Piece
 
   def empty?
     self.is_a?(NullPiece) ? true : false
-  end
-
-end
-
-class NullPiece < Piece
-
-  attr_accessor :display
-  def initialize(pos)
-    @display = 'N'
   end
 
 end

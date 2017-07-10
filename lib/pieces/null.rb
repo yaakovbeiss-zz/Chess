@@ -6,8 +6,12 @@ class NullPiece < Piece
   include Singleton
 
   def initialize
-    @symbol = " "
+    @symbol = "    "
     @color = :none
+  end
+
+  def symbol
+    " "
   end
 
   def moves
