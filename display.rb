@@ -30,7 +30,7 @@ class Display
       end
       puts ""
     end
-    # p @board[@cursor.cursor_pos].pos
+
   end
 
   def background_color(pos)

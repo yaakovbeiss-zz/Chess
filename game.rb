@@ -20,15 +20,15 @@ class Game
     display.render
 
     until board.checkmate?(current_player)
-      # begin
+      begin
         start_pos, end_pos = players[current_player].make_move(board)
         board.move_piece(current_player, start_pos, end_pos)
 
         change_turn
-      # rescue StandardError => e
-      #   puts e.message
-      #   retry
-      # end
+      rescue StandardError => e
+        puts e.message
+        retry
+      end
     end
     puts "the game is over"
   end
