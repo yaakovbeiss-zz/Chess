@@ -5,9 +5,11 @@ class Board
 
   attr_accessor :grid
 
-  def initialize()
-    @grid = Array.new(8) { Array.new(8) }
-    fill_board
+  def initialize(fill = true)
+    @grid = Array.new(8) { Array.new(8, NullPiece.instance) }
+    if fill
+      fill_board
+    end
   end
 
   def [](pos)
@@ -26,15 +28,16 @@ class Board
   end
 
   def add_piece(piece, pos)
-    raise 'position not empty' unless self[pos]== nil
+    raise 'position not empty' unless self[pos].is_a?(NullPiece)
     self[pos] = piece
   end
 
   def dup
-    new_board = Board.new
+    new_board = Board.new(false)
 
     pieces.each do |piece|
-      piece.class.new(piece.color, new_board, piece.pos)
+      new_piece = piece.class.new(piece.color, new_board, piece.pos)
+      new_board[new_piece.pos] = new_piece
     end
     new_board
   end
@@ -43,24 +46,36 @@ class Board
     @grid.flatten.reject {|piece| piece.empty?}
   end
 
-  def valid_move?(start_pos)
-    raise StartError if self[start_pos].is_a?(NullPiece)
-  end
-
   def move_piece(turn_color, start_pos, end_pos)
+    raise StartError if self[start_pos].is_a?(NullPiece)
 
-    valid_move?(start_pos)
     piece = self[start_pos]
 
     if piece.color != turn_color
       raise 'You cannot move the opponents piece'
     elsif !piece.moves.include?(end_pos)
-      p piece.moves
       raise 'You cannot move like that'
+    elsif !piece.valid_moves.include?(end_pos)
+      raise 'You cannot place yourself into check.'
     end
+
     piece.pos = end_pos
     self[end_pos] = piece
     self[start_pos] = NullPiece.instance
+
+    nil
+  end
+
+  def move_piece!(start_pos, end_pos)
+    piece = self[start_pos]
+
+    if !piece.moves.include?(end_pos)
+      raise 'piece cannot move like that'
+    end
+
+    self[end_pos] = piece
+    self[start_pos] = NullPiece.instance
+    piece.pos = end_pos
     nil
   end
 
@@ -68,8 +83,21 @@ class Board
     pos.all? { |x| x.between?(0,7) }
   end
 
+  def in_check?(color)
+    king_pos = find_king(color).pos
+    pieces.any? do |piece|
+      piece.color != color && piece.moves.include?(king_pos)
+    end
+  end
+
+  def checkmate?(color)
+    pieces.select {|p| p.color == color}.all? do |piece|
+      piece.valid_moves.empty?
+    end
+  end
+
   def find_king(color)
-    king_pos = pieces.find { |p| p.color == color && p.is_a(King)}
+    king = pieces.find { |piece| piece.color == color && piece.is_a?(King)}
   end
 
   private
@@ -99,11 +127,11 @@ class Board
       fill_back_row(color)
       fill_pawns_row(color)
     end
-    4.times do |i|
-      8.times do |j|
-        add_piece( NullPiece.instance, [i + 2, j])
-      end
-    end
+    # 4.times do |i|
+    #   8.times do |j|
+    #     add_piece( NullPiece.instance, [i + 2, j])
+    #   end
+    # end
 
   end
 

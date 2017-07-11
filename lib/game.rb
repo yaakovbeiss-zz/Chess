@@ -19,7 +19,7 @@ class Game
   def play
     display.render
 
-    while true
+    until board.checkmate?(current_player)
       # begin
         start_pos, end_pos = players[current_player].make_move(board)
         board.move_piece(current_player, start_pos, end_pos)
@@ -30,7 +30,7 @@ class Game
       #   retry
       # end
     end
-
+    puts "the game is over"
   end
 
   private

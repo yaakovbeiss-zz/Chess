@@ -6,7 +6,8 @@ class Display
 
   attr_reader :cursor
 
-  def initialize(board)
+  def initialize(board, debug = true)
+    @debug = debug
     @board = board
     @cursor = Cursor.new([0,0], board)
   end
@@ -29,7 +30,7 @@ class Display
       end
       puts ""
     end
-
+    # p @board[@cursor.cursor_pos].pos
   end
 
   def background_color(pos)
@@ -51,7 +52,3 @@ class Display
   end
 
 end
-
-# board = Board.new
-# display = Display.new(board)
-# display.render_move

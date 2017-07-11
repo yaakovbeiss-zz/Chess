@@ -51,7 +51,6 @@ module Slideable
         break
       end
     end
-
     possible_moves
   end
 
