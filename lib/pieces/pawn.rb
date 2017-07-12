@@ -1,5 +1,4 @@
 require_relative 'piece'
-require 'byebug'
 
 class Pawn < Piece
   include Stepable

@@ -1,5 +1,4 @@
 require_relative 'pieces'
-require 'byebug'
 
 class Board
 
@@ -127,12 +126,6 @@ class Board
       fill_back_row(color)
       fill_pawns_row(color)
     end
-    # 4.times do |i|
-    #   8.times do |j|
-    #     add_piece( NullPiece.instance, [i + 2, j])
-    #   end
-    # end
-
   end
 
 end
