@@ -26,10 +26,11 @@ class Game
         change_turn
       rescue StandardError => e
         puts e.message
+        sleep(1)
         retry
       end
     end
-    puts "the game is over"
+    puts "#{current_player} is checkmated."
   end
 
   private

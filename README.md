@@ -2,6 +2,8 @@
 
 Chess is a classic version of the game chess, playable in the Ruby console.
 
+To play clone the download the repository and run game.rb in the console.
+
 ## Features and Implementation
 
 ### Moving Pieces
